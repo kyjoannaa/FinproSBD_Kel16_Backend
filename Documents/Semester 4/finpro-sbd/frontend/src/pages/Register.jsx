@@ -43,6 +43,7 @@ export default function Register() {
     return (
         <div className="auth-page">
         <div className="auth-card">
+            
             <h1 className="auth-title">EchoDrop</h1>
             <p className="auth-subtitle">Where anonymous hearts leave their soundtrack</p>
 

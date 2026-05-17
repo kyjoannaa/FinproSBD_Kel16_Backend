@@ -37,16 +37,20 @@ export default function MessageDetail() {
             </div>
         </div>
 
-        {message.external_id && (
-            <div className="player-section">
-            <p className="player-label">Song for you</p>
-            <iframe
-                src={`https://www.youtube.com/embed/${message.external_id}`}
-                allowFullScreen
-                className="yt-player"
-            />
-            </div>
-        )}
+    {message.external_id && message.media_type === 'spotify' && (
+    <div className="player-section">
+        <p className="player-label">Soundtrack for you </p>
+        <iframe
+            src={`https://open.spotify.com/embed/track/${message.external_id}`}
+            width="100%"
+            height="80" 
+            frameBorder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            className="spotify-player"
+            style={{ borderRadius: '12px' }}
+        />
+    </div>
+    )}
 
         <div className="submission-section">
             <h2 className="submission-title">Submission</h2>

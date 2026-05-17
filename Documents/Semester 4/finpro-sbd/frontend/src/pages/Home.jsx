@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import MessageCard from '../components/MessageCard'
+import { processSpotifyToken } from '../utils/spotify' 
 
 export default function Home() {
     const [messages, setMessages] = useState([])
@@ -8,6 +9,8 @@ export default function Home() {
     const [search, setSearch] = useState('')
 
     useEffect(() => {
+        processSpotifyToken(); 
+
         const url = search.trim()
         ? `http://localhost:5000/api/messages?search=${encodeURIComponent(search)}`
         : 'http://localhost:5000/api/messages'

@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getSpotifyToken, loginSpotify, searchSpotify } from '../utils/spotify'
+import { getSpotifyToken, loginSpotify, searchSpotify } from '../utils/spotify' 
 
 export default function SubmissionForm() {
     const navigate = useNavigate()
@@ -13,6 +13,19 @@ export default function SubmissionForm() {
     const [selectedSong, setSelectedSong] = useState(null)
     const [searching, setSearching] = useState(false)
     const [submitting, setSubmitting] = useState(false)
+
+    useEffect(() => {
+        if (!songQuery.trim()) {
+            setSongResults([])
+            return
+        }
+
+        const delaySearch = setTimeout(() => {
+            handleSongSearch()
+        }, 500)
+
+        return () => clearTimeout(delaySearch)
+    }, [songQuery]) 
 
     function handleImageChange(e) {
         const file = e.target.files[0]
@@ -68,12 +81,10 @@ export default function SubmissionForm() {
             imageUrl = uploadData.url
         }
 
-        const messageBody = {
+       const messageBody = {
             content: `To: ${to}\n${content}`,
             media_type: selectedSong ? 'spotify' : imageUrl ? 'image' : null,
-            media_url: selectedSong
-            ? `https://open.spotify.com/track/${selectedSong.id}`
-            : imageUrl,
+            media_url: selectedSong ? `https://open.spotify.com/track/${selectedSong.id}` : imageUrl,
             external_id: selectedSong ? selectedSong.id : null
         }
 
@@ -119,7 +130,7 @@ export default function SubmissionForm() {
             <div className="form-fields">
             <input
                 type="text"
-                placeholder="Enter Name"
+                placeholder="To: Enter Name"
                 value={to}
                 onChange={e => setTo(e.target.value)}
                 className="input-to"
@@ -140,7 +151,6 @@ export default function SubmissionForm() {
             placeholder="Pick your song here"
             value={songQuery}
             onChange={e => setSongQuery(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleSongSearch()}
             className="song-input"
             />
         </div>
@@ -166,14 +176,16 @@ export default function SubmissionForm() {
         )}
 
         {selectedSong && (
-            <iframe
-            src={`https://open.spotify.com/embed/track/${selectedSong.id}`}
-            width="100%"
-            height="80"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            className="spotify-preview"
-            />
-        )}
+    <iframe
+        src={`https://open.spotify.com/embed/track/${selectedSong.id}`}
+        width="100%"
+        height="80"
+        frameBorder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        className="spotify-preview"
+        style={{ borderRadius: '12px', marginTop: '15px' }} 
+    />
+    )}
 
         <button
             className="submit-btn"
